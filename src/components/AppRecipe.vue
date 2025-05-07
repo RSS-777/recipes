@@ -3,17 +3,18 @@
     <h2 class="recipe__title">{{ title }}</h2>
 
     <div class="recipe__content">
-      <div>
+      <div class="block__flex">
         <ul class="recipe__ingredients">
           <li v-for="(item, index) in ingredients" :key="index">{{ item }}</li>
         </ul>
-        
-        <span class="recipe__time">{{ time }}</span>
-        <span class="recipe__servings">{{ servings }}</span>
+        <img class="recipe__foto" :src="photo ? photo : myImage" />
       </div>
-      <img class="recipe__foto" :src="photo ? photo : myImage" />
+      <p class="recipe__instructions">{{ instructions }}</p>
+      <div class="recipe__info">
+        <span class="recipe__time">Час приготування: <i>{{ time }}</i></span>
+        <span class="recipe__servings">Кількість порцій: <i>{{ servings }}</i></span>
+      </div>
     </div>
-    <p class="recipe__instructions">{{ instructions }}</p>
   </div>
 </template>
 
@@ -36,39 +37,76 @@ const { title, ingredients, instructions, time, servings, photo } =
 <style scoped>
 .recipe {
   position: relative;
-  border: 2px solid red;
   max-width: 950px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 15px;
 }
 
-.recipe__content {
+.recipe__title {
+  text-align: center;
+  color: rgb(0, 118, 33);
+}
+
+.block__flex {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  border: 2px solid green;
-}
-
-.recipe__ingredients {
-   margin: auto;
-   padding-left: 5px;
-}
-
-.recipe__ingredients li{
-   list-style: none;
-   position: relative;
-}
-
-.recipe__ingredients li::before{
-  content: "\1F538"; 
+  align-content: flex-start;
+  margin: 10px 0;
 }
 
 .recipe__foto {
   max-width: 200px;
   width: 100%;
   height: auto;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px 0 black;
 }
 
-.recipe__title {
-  text-align: center;
-  color: rgb(0, 118, 33);
+.recipe__ingredients {
+  padding-left: 5px;
+}
+
+.recipe__ingredients li {
+  list-style: none;
+}
+
+.recipe__ingredients li::before {
+  content: "\1F538";
+}
+
+.recipe__instructions {
+  font-style: italic;
+}
+
+.recipe__info {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  color: #3A3042;
+}
+
+.recipe__time i {
+  color: #FF6723;
+}
+
+.recipe__servings i {
+   color: #FF6723;
+}
+@media (max-width: 768px) {
+  .block__flex {
+    flex-direction: column;
+    align-content: center;
+  }
+
+  .recipe__foto {
+    margin: auto;
+    order: 1;
+  }
+
+  .recipe__ingredients {
+    padding-top: 5px;
+    order: 2;
+  }
 }
 </style>

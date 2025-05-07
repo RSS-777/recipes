@@ -57,7 +57,6 @@
         <option value="salads">Салати</option>
         <option value="soups">Супи</option>
         <option value="snacks">Закуски</option>
-        <option value="main">Основні страви</option>
         <option value="meat">М'ясні страви</option>
         <option value="fish">Рибні страви</option>
         <option value="sides">Гарніри</option>
@@ -137,6 +136,15 @@ const schema = yup.object({
 
 const { handleSubmit } = useForm<IRecipeFormValues>({
   validationSchema: schema,
+  initialValues: {
+    title: "",
+    ingredients: "",
+    instructions: "",
+    time: "",
+    servings: null,
+    photo: "",
+    category: "", 
+  },
 });
 
 const { value: title, errorMessage: titleError } = useField<string>("title");

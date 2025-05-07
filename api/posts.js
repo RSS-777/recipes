@@ -31,8 +31,8 @@ export default async function handle(req, res) {
                 typeof recipe.instructions !== 'string' || recipe.instructions.trim() === '' || 
                 typeof recipe.time !== 'string' || recipe.time.trim() === '' ||
                 typeof recipe.servings !== 'number' || recipe.servings <= 0 ||
-                (recipe.photo && typeof recipe.photo !== 'string') || 
-                typeof recipe.categories === "" || recipe.categories.trim() === '' 
+                (recipe.photo && typeof recipe.photo !== 'string') ||
+                typeof recipe.category !== 'string' || recipe.category.trim() === ''
             ) {
                 return res.status(400).json({ error: 'Invalid recipe data' });
             }
