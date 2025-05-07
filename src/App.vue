@@ -3,6 +3,7 @@ import AppForm from "./components/AppForm.vue";
 import AppRecipe from "./components/AppRecipe.vue";
 import { ref, onMounted } from "vue";
 const selected = ref<string>("all");
+const isLoading = ref(true);
 
 interface IRecipe {
   title: string;
@@ -11,19 +12,25 @@ interface IRecipe {
   time: string;
   servings: number;
   photo?: string | null;
-  categories: string;
+  category: string;
 }
 const recipes = ref<IRecipe[]>([]);
+const filteredRecipes = ref<IRecipe[]>([]);
 
 async function getRecipes() {
+  isLoading.value = true;
+
   try {
     const response = await fetch("/api/posts");
     const allRecipes = await response.json();
     if (allRecipes) {
       recipes.value = allRecipes;
+      handleCategory(selected.value);
     }
   } catch (error) {
     console.error("Error fetching all recipes:", error);
+  } finally {
+    isLoading.value = false;
   }
 }
 
@@ -33,6 +40,13 @@ onMounted(() => {
 
 const handleCategory = (value: string) => {
   selected.value = value;
+  if (value === "all") {
+    filteredRecipes.value = recipes.value;
+  } else {
+    filteredRecipes.value = recipes.value.filter(
+      (item) => item.category === value
+    );
+  }
 };
 </script>
 
@@ -167,7 +181,7 @@ const handleCategory = (value: string) => {
     <main class="main">
       <section class="content-section">
         <AppRecipe
-          v-for="(item, index) in recipes"
+          v-for="(item, index) in filteredRecipes"
           :key="index"
           :title="item.title"
           :ingredients="item.ingredients"
@@ -176,8 +190,12 @@ const handleCategory = (value: string) => {
           :servings="item.servings"
           :photo="item.photo"
         />
-        <p v-if="!recipes.length">Завантаження...</p>
-        <!-- <p v-if="!filteredRecipes.length">Немає рецептів у цій категорії</p> -->
+        <p v-if="!recipes.length && isLoading" class="status-indicator">
+          Завантаження...
+        </p>
+        <p v-else-if="!filteredRecipes.length && !isLoading" class="status-indicator">
+          Немає рецептів у цій категорії
+        </p>
       </section>
       <section class="recipe-add-section">
         <AppForm @recipe-added="getRecipes" />
@@ -198,9 +216,11 @@ const handleCategory = (value: string) => {
     "header"
     "main";
   grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr;
   position: relative;
   max-width: 950px;
   margin: auto;
+  min-height: 100vh;
 }
 
 header {
@@ -272,7 +292,22 @@ main {
 
 .recipe-add-section {
   grid-area: recipe-add-section;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
+
+.status-indicator {
+    font-size: 18px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 2px solid  black;
+    border-radius: 15px;
+    color: #007621;
+  }
 
 @media (max-width: 580px) {
   .wrapper {
@@ -289,6 +324,7 @@ main {
 
   main {
     margin-left: auto;
+    width: 100%;
   }
 
   .aside {

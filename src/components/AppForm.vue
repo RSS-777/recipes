@@ -1,87 +1,92 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <div class="form__block-input">
-      <input
-        id="title"
-        v-model="title"
-        placeholder="Введіть назву страви, наприклад, Млинці"
-      />
-      <span>{{ titleError }}</span>
-    </div>
-    <div class="form__block-input">
-      <textarea
-        id="ingredients"
-        v-model="ingredients"
-        placeholder="Введіть інгредієнти через кому"
-      ></textarea>
-      <span>{{ ingredientsError }}</span>
-    </div>
-    <div class="form__block-input">
-      <textarea
-        id="instructions"
-        v-model="instructions"
-        placeholder="Опишіть покрокову інструкцію приготування"
-      ></textarea>
-      <span>{{ instructionsError }}</span>
-    </div>
-    <div class="form__block-input">
-      <input
-        id="time"
-        type="text"
-        v-model="time"
-        placeholder="Введіть час приготування"
-      />
-      <span>{{ timeError }}</span>
-    </div>
-    <div class="form__block-input">
-      <input
-        id="servings"
-        type="number"
-        v-model="servings"
-        placeholder="Введіть кількість порцій"
-      />
-      <span>{{ servingsError }}</span>
-    </div>
-    <div class="form__block-input">
-      <input
-        id="photo"
-        type="text"
-        v-model="photo"
-        placeholder="Введіть URL зображення"
-      />
-      <span>{{ photoError }}</span>
-    </div>
-    <div class="form__block-input">
-      <select id="category" v-model="category">
-        <option value="">Вкажіть категорію</option>
-        <option value="salads">Салати</option>
-        <option value="soups">Супи</option>
-        <option value="snacks">Закуски</option>
-        <option value="meat">М'ясні страви</option>
-        <option value="fish">Рибні страви</option>
-        <option value="sides">Гарніри</option>
-        <option value="vegetable">Овочеві страви</option>
-        <option value="porridge">Каші</option>
-        <option value="bakery">Випічка</option>
-        <option value="bread">Хліб</option>
-        <option value="desserts">Десерти</option>
-        <option value="drinks">Напої</option>
-        <option value="sauces">Соуси</option>
-        <option value="preserves">Консервація</option>
-        <option value="fastfood">Фастфуд домашній</option>
-        <option value="vegetarian">Вегетаріанські страви</option>
-        <option value="other">Інше</option>
-      </select>
-      <span>{{ categoryError }}</span>
-    </div>
-    <button type="submit">Надіслати</button>
-  </form>
+  <div class="wraper">
+    <form v-if="addRecipe" @submit.prevent="onSubmit" class="form">
+      <div class="form__block-input">
+        <input
+          id="title"
+          v-model="title"
+          placeholder="Введіть назву страви, наприклад, Млинці"
+        />
+        <span>{{ titleError }}</span>
+      </div>
+      <div class="form__block-input">
+        <textarea
+          id="ingredients"
+          v-model="ingredients"
+          placeholder="Введіть інгредієнти через кому"
+        ></textarea>
+        <span>{{ ingredientsError }}</span>
+      </div>
+      <div class="form__block-input">
+        <textarea
+          id="instructions"
+          v-model="instructions"
+          placeholder="Опишіть покрокову інструкцію приготування"
+        ></textarea>
+        <span>{{ instructionsError }}</span>
+      </div>
+      <div class="form__block-input">
+        <input
+          id="time"
+          type="text"
+          v-model="time"
+          placeholder="Введіть час приготування"
+        />
+        <span>{{ timeError }}</span>
+      </div>
+      <div class="form__block-input">
+        <input
+          id="servings"
+          type="number"
+          v-model="servings"
+          placeholder="Введіть кількість порцій"
+        />
+        <span>{{ servingsError }}</span>
+      </div>
+      <div class="form__block-input">
+        <input
+          id="photo"
+          type="text"
+          v-model="photo"
+          placeholder="Введіть URL зображення"
+        />
+        <span>{{ photoError }}</span>
+      </div>
+      <div class="form__block-input">
+        <select id="category" v-model="category">
+          <option value="">Вкажіть категорію</option>
+          <option value="salads">Салати</option>
+          <option value="soups">Супи</option>
+          <option value="snacks">Закуски</option>
+          <option value="meat">М'ясні страви</option>
+          <option value="fish">Рибні страви</option>
+          <option value="sides">Гарніри</option>
+          <option value="vegetable">Овочеві страви</option>
+          <option value="porridge">Каші</option>
+          <option value="bakery">Випічка</option>
+          <option value="bread">Хліб</option>
+          <option value="desserts">Десерти</option>
+          <option value="drinks">Напої</option>
+          <option value="sauces">Соуси</option>
+          <option value="preserves">Консервація</option>
+          <option value="fastfood">Фастфуд домашній</option>
+          <option value="vegetarian">Вегетаріанські страви</option>
+          <option value="other">Інше</option>
+        </select>
+        <span>{{ categoryError }}</span>
+      </div>
+      <button type="submit">Надіслати</button>
+    </form>
+    <button class="button-add-recipe" @click="handleOpenForm">{{ addRecipe ? 'Скасувати додавання рецепта' : 'Додати новий рецепт'}}</button>
+  </div>
 </template>
 
 <script setup lang="ts">
+import {ref} from 'vue'
 import { useForm, useField } from "vee-validate";
 import * as yup from "yup";
 const emit = defineEmits(["recipe-added"]);
+const addRecipe = ref<boolean>(false)
 
 interface IRecipeFormValues {
   title: string;
@@ -95,6 +100,10 @@ interface IRecipeFormValues {
 
 interface IRecipeValuesSubmit extends Omit<IRecipeFormValues, "ingredients"> {
   ingredients: string[];
+}
+
+const handleOpenForm = () => {
+  addRecipe.value = !addRecipe.value
 }
 
 const schema = yup.object({
@@ -167,10 +176,11 @@ const createRecipe = async (recipe: IRecipeValuesSubmit) => {
       },
       body: JSON.stringify({ recipe }),
     });
-
+    
     const dataFetch = await response.json();
     emit("recipe-added");
-    console.log("Молливо використаю для редагування через id", dataFetch);
+    addRecipe.value = false
+    // console.log("Молливо використаю для редагування через id", dataFetch);
   } catch (error) {
     console.error("Error inserting recipe:", error);
   }
@@ -186,4 +196,12 @@ const onSubmit = handleSubmit((values: IRecipeFormValues) => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+  .form {
+
+  }
+
+  .form__block-input {
+
+  }
+</style>
