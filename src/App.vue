@@ -2,6 +2,7 @@
 import AppForm from "./components/AppForm.vue";
 import AppRecipe from "./components/AppRecipe.vue";
 import { ref, onMounted } from "vue";
+import AppButton from "./components/AppButton.vue";
 const selected = ref<string>("all");
 const isLoading = ref(true);
 
@@ -48,6 +49,53 @@ const handleCategory = (value: string) => {
     );
   }
 };
+
+const categoriesArr = [
+  "all",
+  "salads",
+  "soups",
+  "snacks",
+  "main",
+  "meat",
+  "fish",
+  "sides",
+  "vegetable",
+  "porridge",
+  "bakery",
+  "bread",
+  "desserts",
+  "drinks",
+  "sauces",
+  "preserves",
+  "fastfood",
+  "vegetarian",
+  "other",
+] as const;
+
+const categories = {
+  all: "Всі",
+  salads: "Салати",
+  soups: "Супи",
+  snacks: "Закуски",
+  main: "Основні страви",
+  meat: "М'ясні страви",
+  fish: "Рибні страви",
+  sides: "Гарніри",
+  vegetable: "Овочеві страви",
+  porridge: "Каші",
+  bakery: "Випічка",
+  bread: "Хліб",
+  desserts: "Десерти",
+  drinks: "Напої",
+  sauces: "Соуси",
+  preserves: "Консервація",
+  fastfood: "Фастфуд домашній",
+  vegetarian: "Вегетаріанські страви",
+  other: "Інше",
+} as const;
+
+type CategoryKey = keyof typeof categories;
+const categoryKeys = Object.keys(categories) as CategoryKey[];
 </script>
 
 <template>
@@ -60,124 +108,18 @@ const handleCategory = (value: string) => {
       <h4 class="aside__title">Категорії рецептів:</h4>
       <div class="aside__slide">
         <nav class="aside__nav">
-          <button
-            @click="handleCategory('all')"
-            :class="{ active: selected === 'all' }"
+          <AppButton
+            v-for="category in categoryKeys"
+            :key="category"
+            @button-click="handleCategory(category)"
+            :class="{ active: selected === category }"
           >
-            Всі
-          </button>
-          <button
-            @click="handleCategory('salads')"
-            :class="{ active: selected === 'salads' }"
-          >
-            Салати
-          </button>
-          <button
-            @click="handleCategory('soups')"
-            :class="{ active: selected === 'soups' }"
-          >
-            Супи
-          </button>
-          <button
-            @click="handleCategory('snacks')"
-            :class="{ active: selected === 'snacks' }"
-          >
-            Закуски
-          </button>
-          <button
-            @click="handleCategory('main')"
-            :class="{ active: selected === 'main' }"
-          >
-            Основні страви
-          </button>
-          <button
-            @click="handleCategory('meat')"
-            :class="{ active: selected === 'meat' }"
-          >
-            М'ясні страви
-          </button>
-          <button
-            @click="handleCategory('fish')"
-            :class="{ active: selected === 'fish' }"
-          >
-            Рибні страви
-          </button>
-          <button
-            @click="handleCategory('sides')"
-            :class="{ active: selected === 'sides' }"
-          >
-            Гарніри
-          </button>
-          <button
-            @click="handleCategory('vegetable')"
-            :class="{ active: selected === 'vegetable' }"
-          >
-            Овочеві страви
-          </button>
-          <button
-            @click="handleCategory('porridge')"
-            :class="{ active: selected === 'porridge' }"
-          >
-            Каші
-          </button>
-          <button
-            @click="handleCategory('bakery')"
-            :class="{ active: selected === 'bakery' }"
-          >
-            Випічка
-          </button>
-          <button
-            @click="handleCategory('bread')"
-            :class="{ active: selected === 'bread' }"
-          >
-            Хліб
-          </button>
-          <button
-            @click="handleCategory('desserts')"
-            :class="{ active: selected === 'desserts' }"
-          >
-            Десерти
-          </button>
-          <button
-            @click="handleCategory('drinks')"
-            :class="{ active: selected === 'drinks' }"
-          >
-            Напої
-          </button>
-          <button
-            @click="handleCategory('sauces')"
-            :class="{ active: selected === 'sauces' }"
-          >
-            Соуси
-          </button>
-          <button
-            @click="handleCategory('preserves')"
-            :class="{ active: selected === 'preserves' }"
-          >
-            Консервація
-          </button>
-          <button
-            @click="handleCategory('fastfood')"
-            :class="{ active: selected === 'fastfood' }"
-          >
-            Фастфуд домашній
-          </button>
-          <button
-            @click="handleCategory('vegetarian')"
-            :class="{ active: selected === 'vegetarian' }"
-          >
-            Вегетаріанські страви
-          </button>
-          <button
-            @click="handleCategory('other')"
-            :class="{ active: selected === 'other' }"
-          >
-            Інше
-          </button>
+            {{ categories[category] }}
+          </AppButton>
         </nav>
       </div>
     </aside>
-
+   
     <main class="main">
       <section class="content-section">
         <AppRecipe
@@ -193,7 +135,10 @@ const handleCategory = (value: string) => {
         <p v-if="!recipes.length && isLoading" class="status-indicator">
           Завантаження...
         </p>
-        <p v-else-if="!filteredRecipes.length && !isLoading" class="status-indicator">
+        <p
+          v-else-if="!filteredRecipes.length && !isLoading"
+          class="status-indicator"
+        >
           Немає рецептів у цій категорії
         </p>
       </section>
@@ -298,16 +243,16 @@ main {
 }
 
 .status-indicator {
-    font-size: 18px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    border: 2px solid  black;
-    border-radius: 15px;
-    color: #007621;
-  }
+  font-size: 18px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 15px;
+  color: #007621;
+}
 
 @media (max-width: 580px) {
   .wrapper {

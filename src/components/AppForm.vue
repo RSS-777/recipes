@@ -77,13 +77,14 @@
       </div>
       <button type="submit">Надіслати</button>
     </form>
-    <button class="button-add-recipe" @click="handleOpenForm">{{ addRecipe ? 'Скасувати додавання рецепта' : 'Додати новий рецепт'}}</button>
+    <AppButton @button-click="handleOpenForm">{{ addRecipe ? 'Скасувати додавання рецепта' : 'Додати новий рецепт'}}</AppButton>
   </div>
 </template>
 
 <script setup lang="ts">
 import {ref} from 'vue'
 import { useForm, useField } from "vee-validate";
+import AppButton from './AppButton.vue';
 import * as yup from "yup";
 const emit = defineEmits(["recipe-added"]);
 const addRecipe = ref<boolean>(false)
@@ -203,5 +204,9 @@ const onSubmit = handleSubmit((values: IRecipeFormValues) => {
 
   .form__block-input {
 
+  }
+
+  .button-add-recipe {
+     
   }
 </style>
