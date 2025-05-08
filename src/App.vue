@@ -97,7 +97,7 @@ const categoryKeys = Object.keys(categories) as CategoryKey[];
         </nav>
       </div>
     </aside>
-   
+
     <main class="main">
       <section class="content-section">
         <AppRecipe
@@ -165,7 +165,6 @@ main {
 
 .aside {
   grid-area: aside;
-  padding: 10px;
   text-align: center;
   background-color: #3a3042;
   position: fixed;
@@ -178,25 +177,16 @@ main {
   color: white;
 }
 
+.aside__slide {
+  overflow-y: auto;
+  height: 100%;
+}
+
 .aside__nav {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.aside__nav button {
-  border: none;
-  box-shadow: 0.5px 0.5px 3px 0 black;
-  border-radius: 4px;
-  padding: 2px 5px;
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out;
-  background-color: #db9d47;
-}
-
-.aside__nav button:hover {
-  box-shadow: 0.5px 0.5px 1px 0 rgb(111, 111, 111);
-  transform: scale(0.98);
+  margin: 0 10px 40px;
 }
 
 .aside__nav .active {
@@ -227,9 +217,9 @@ main {
   align-items: center;
   justify-content: center;
   background-color: white;
-  border: 2px solid black;
   border-radius: 15px;
   color: #007621;
+  box-shadow: 1px 1px 5px 0 black;
 }
 
 @media (max-width: 580px) {
@@ -267,6 +257,7 @@ main {
 
   .aside__slide {
     overflow: auto;
+    height: auto;
   }
 
   .aside__nav {
@@ -274,6 +265,7 @@ main {
     gap: 5px;
     min-width: max-content;
     padding: 0 5px 10px;
+    margin: 0;
   }
 }
 </style>

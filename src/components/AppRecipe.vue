@@ -41,6 +41,7 @@ const { title, ingredients, instructions, time, servings, photo } =
   background-color: white;
   padding: 10px;
   border-radius: 15px;
+  box-shadow: 1px 1px 5px 0 black;
 }
 
 .recipe__title {

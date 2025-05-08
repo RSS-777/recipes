@@ -201,7 +201,6 @@ const onSubmit = handleSubmit((values: IRecipeFormValues) => {
 <style scoped>
 .wraper {
   text-align: center;
-  border: 2px solid olivedrab;
   display: flex;
   flex-direction: column;
   align-items: center;
