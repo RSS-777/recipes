@@ -1,11 +1,19 @@
 <template>
-  <button @click="emit('button-click')">
+  <button :type="type" @click="emit('button-click')">
     <slot></slot>
   </button>
 </template>
 
 <script setup lang="ts">
-   const emit = defineEmits(['button-click'])
+import type { PropType } from 'vue';
+
+const emit = defineEmits(["button-click"]);
+defineProps({
+  type: {
+    type: String as PropType<'button' | 'submit' | 'reset' | undefined >,
+    default: "button",
+  },
+});
 </script>
 
 <style scoped>

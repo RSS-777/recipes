@@ -50,28 +50,6 @@ const handleCategory = (value: string) => {
   }
 };
 
-const categoriesArr = [
-  "all",
-  "salads",
-  "soups",
-  "snacks",
-  "main",
-  "meat",
-  "fish",
-  "sides",
-  "vegetable",
-  "porridge",
-  "bakery",
-  "bread",
-  "desserts",
-  "drinks",
-  "sauces",
-  "preserves",
-  "fastfood",
-  "vegetarian",
-  "other",
-] as const;
-
 const categories = {
   all: "Всі",
   salads: "Салати",

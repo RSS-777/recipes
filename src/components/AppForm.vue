@@ -5,17 +5,17 @@
         <input
           id="title"
           v-model="title"
-          placeholder="Введіть назву страви, наприклад, Млинці"
+          placeholder="Введіть назву страви, наприклад: Млинці"
         />
-        <span>{{ titleError }}</span>
+        <p>{{ titleError }}</p>
       </div>
       <div class="form__block-input">
         <textarea
           id="ingredients"
           v-model="ingredients"
-          placeholder="Введіть інгредієнти через кому"
+          placeholder="Введіть інгредієнти, розділені комами (наприклад: картопля 1кг, морква 2шт, цибуля 1шт)"
         ></textarea>
-        <span>{{ ingredientsError }}</span>
+        <p>{{ ingredientsError }}</p>
       </div>
       <div class="form__block-input">
         <textarea
@@ -23,25 +23,25 @@
           v-model="instructions"
           placeholder="Опишіть покрокову інструкцію приготування"
         ></textarea>
-        <span>{{ instructionsError }}</span>
+        <p>{{ instructionsError }}</p>
       </div>
       <div class="form__block-input">
         <input
           id="time"
           type="text"
           v-model="time"
-          placeholder="Введіть час приготування"
+          placeholder="Час приготування (наприклад: 30 хвилин)"
         />
-        <span>{{ timeError }}</span>
+        <p>{{ timeError }}</p>
       </div>
       <div class="form__block-input">
         <input
           id="servings"
           type="number"
           v-model="servings"
-          placeholder="Введіть кількість порцій"
+          placeholder="Кількість порцій"
         />
-        <span>{{ servingsError }}</span>
+        <p>{{ servingsError }}</p>
       </div>
       <div class="form__block-input">
         <input
@@ -50,7 +50,7 @@
           v-model="photo"
           placeholder="Введіть URL зображення"
         />
-        <span>{{ photoError }}</span>
+        <p>{{ photoError }}</p>
       </div>
       <div class="form__block-input">
         <select id="category" v-model="category">
@@ -73,21 +73,23 @@
           <option value="vegetarian">Вегетаріанські страви</option>
           <option value="other">Інше</option>
         </select>
-        <span>{{ categoryError }}</span>
+        <p>{{ categoryError }}</p>
       </div>
-      <button type="submit">Надіслати</button>
+      <AppButton type="submit">Зберегти рецепт</AppButton>
     </form>
-    <AppButton @button-click="handleOpenForm">{{ addRecipe ? 'Скасувати додавання рецепта' : 'Додати новий рецепт'}}</AppButton>
+    <AppButton @button-click="handleOpenForm">{{
+      addRecipe ? "Скасувати додавання рецепта" : "Додати новий рецепт"
+    }}</AppButton>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import { ref } from "vue";
 import { useForm, useField } from "vee-validate";
-import AppButton from './AppButton.vue';
+import AppButton from "./AppButton.vue";
 import * as yup from "yup";
 const emit = defineEmits(["recipe-added"]);
-const addRecipe = ref<boolean>(false)
+const addRecipe = ref<boolean>(false);
 
 interface IRecipeFormValues {
   title: string;
@@ -104,8 +106,8 @@ interface IRecipeValuesSubmit extends Omit<IRecipeFormValues, "ingredients"> {
 }
 
 const handleOpenForm = () => {
-  addRecipe.value = !addRecipe.value
-}
+  addRecipe.value = !addRecipe.value;
+};
 
 const schema = yup.object({
   title: yup
@@ -139,9 +141,7 @@ const schema = yup.object({
     .nullable()
     .notRequired(),
 
-  category: yup
-    .string()
-    .required("Необхідно вказати категорію")
+  category: yup.string().required("Необхідно вказати категорію"),
 });
 
 const { handleSubmit } = useForm<IRecipeFormValues>({
@@ -153,7 +153,7 @@ const { handleSubmit } = useForm<IRecipeFormValues>({
     time: "",
     servings: null,
     photo: "",
-    category: "", 
+    category: "",
   },
 });
 
@@ -166,7 +166,8 @@ const { value: time, errorMessage: timeError } = useField<string>("time");
 const { value: servings, errorMessage: servingsError } =
   useField<number>("servings");
 const { value: photo, errorMessage: photoError } = useField<string>("photo");
-const { value: category, errorMessage: categoryError } = useField<string>("category");
+const { value: category, errorMessage: categoryError } =
+  useField<string>("category");
 
 const createRecipe = async (recipe: IRecipeValuesSubmit) => {
   try {
@@ -177,10 +178,10 @@ const createRecipe = async (recipe: IRecipeValuesSubmit) => {
       },
       body: JSON.stringify({ recipe }),
     });
-    
+
     const dataFetch = await response.json();
     emit("recipe-added");
-    addRecipe.value = false
+    addRecipe.value = false;
     // console.log("Молливо використаю для редагування через id", dataFetch);
   } catch (error) {
     console.error("Error inserting recipe:", error);
@@ -198,15 +199,64 @@ const onSubmit = handleSubmit((values: IRecipeFormValues) => {
 </script>
 
 <style scoped>
-  .form {
+.wraper {
+  text-align: center;
+  border: 2px solid olivedrab;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
 
-  }
+.form {
+  margin-bottom: 20px;
+  padding: 10px;
+  box-shadow: 1px 1px 8px 0 black;
+  max-width: 350px;
+  width: 100%;
+  background-color: #3a3042;
+  border-radius: 10px;
+}
 
-  .form__block-input {
+.form__block-input {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 5px;
+}
 
-  }
+.form__block-input input {
+  padding: 2px 5px;
+  outline-style: none;
+  border-radius: 5px;
+}
 
-  .button-add-recipe {
-     
-  }
+.form__block-input textarea {
+  padding: 2px 5px;
+  outline-style: none;
+  border-radius: 5px;
+  resize: none;
+  height: 80px;
+}
+
+.form__block-input select {
+  padding: 2px 5px;
+  outline-style: none;
+  border-radius: 5px;
+  width: fit-content;
+  margin: auto;
+  text-align: center;
+}
+
+.form__block-input p {
+  font-size: 11px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  color: #db9d47;
+}
+
+.form button {
+  margin-top: 10px;
+}
 </style>
