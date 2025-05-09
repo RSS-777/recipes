@@ -24,6 +24,7 @@ async function getRecipes() {
   try {
     const response = await fetch("/api/posts");
     const allRecipes = await response.json();
+
     if (allRecipes) {
       recipes.value = allRecipes;
       handleCategory(selected.value);
@@ -54,12 +55,9 @@ const categories = {
   all: "Всі",
   salads: "Салати",
   soups: "Супи",
-  snacks: "Закуски",
-  main: "Основні страви",
   meat: "М'ясні страви",
   fish: "Рибні страви",
   sides: "Гарніри",
-  vegetable: "Овочеві страви",
   porridge: "Каші",
   bakery: "Випічка",
   bread: "Хліб",
@@ -173,7 +171,7 @@ main {
 }
 
 .aside__title {
-  margin-bottom: 15px;
+  margin: 10px auto 15px;
   color: white;
 }
 
@@ -186,7 +184,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin: 0 10px 40px;
+  margin: 0 10px 55px;
 }
 
 .aside__nav .active {
@@ -252,7 +250,7 @@ main {
   }
 
   .aside__title {
-    margin-bottom: 5px;
+    margin: 0 auto 10px;
   }
 
   .aside__slide {

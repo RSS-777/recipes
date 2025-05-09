@@ -76,6 +76,7 @@
         <p>{{ categoryError }}</p>
       </div>
       <AppButton type="submit">Зберегти рецепт</AppButton>
+      <p v-if="isSubmitting" class="form__loading">{{ submitMessage }}</p>
     </form>
     <AppButton @button-click="handleOpenForm">{{
       addRecipe ? "Скасувати додавання рецепта" : "Додати новий рецепт"
@@ -90,6 +91,8 @@ import AppButton from "./AppButton.vue";
 import * as yup from "yup";
 const emit = defineEmits(["recipe-added"]);
 const addRecipe = ref<boolean>(false);
+const isSubmitting = ref<boolean>(false);
+const submitMessage = ref("");
 
 interface IRecipeFormValues {
   title: string;
@@ -157,19 +160,32 @@ const { handleSubmit } = useForm<IRecipeFormValues>({
   },
 });
 
+const clearForm = () => {
+  title.value = "";
+  ingredients.value = "";
+  instructions.value = "";
+  time.value = "";
+  servings.value = null;
+  photo.value = "";
+  category.value = "";
+};
+
 const { value: title, errorMessage: titleError } = useField<string>("title");
 const { value: ingredients, errorMessage: ingredientsError } =
   useField<string>("ingredients");
 const { value: instructions, errorMessage: instructionsError } =
   useField<string>("instructions");
 const { value: time, errorMessage: timeError } = useField<string>("time");
-const { value: servings, errorMessage: servingsError } =
-  useField<number>("servings");
+const { value: servings, errorMessage: servingsError } = useField<
+  number | null
+>("servings");
 const { value: photo, errorMessage: photoError } = useField<string>("photo");
 const { value: category, errorMessage: categoryError } =
   useField<string>("category");
 
 const createRecipe = async (recipe: IRecipeValuesSubmit) => {
+  isSubmitting.value = true;
+  submitMessage.value = "Йде додавання рецепта...";
   try {
     const response = await fetch("/api/posts", {
       method: "POST",
@@ -181,10 +197,16 @@ const createRecipe = async (recipe: IRecipeValuesSubmit) => {
 
     const dataFetch = await response.json();
     emit("recipe-added");
+    clearForm();
     addRecipe.value = false;
     // console.log("Молливо використаю для редагування через id", dataFetch);
   } catch (error) {
     console.error("Error inserting recipe:", error);
+  } finally {
+    isSubmitting.value = false;
+    setTimeout(() => {
+      submitMessage.value = "";
+    }, 3000);
   }
 };
 
@@ -210,7 +232,7 @@ const onSubmit = handleSubmit((values: IRecipeFormValues) => {
 
 .form {
   margin-bottom: 20px;
-  padding: 10px;
+  padding: 15px;
   box-shadow: 1px 1px 8px 0 black;
   max-width: 350px;
   width: 100%;
@@ -257,5 +279,11 @@ const onSubmit = handleSubmit((values: IRecipeFormValues) => {
 
 .form button {
   margin-top: 10px;
+}
+
+.form__loading {
+  margin: 15px 10px 0;
+  color: #a1cca5;
+  font-size: 12px;
 }
 </style>

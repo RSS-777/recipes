@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import myImage from "../assets/images/pancakes.jpg";
+import myImage from "../assets/images/white-plate.jpg";
 
 interface Props {
   title: string;
@@ -53,6 +53,7 @@ const { title, ingredients, instructions, time, servings, photo } =
   display: flex;
   justify-content: space-between;
   align-content: flex-start;
+  gap: 10px;
   margin: 10px 0;
 }
 

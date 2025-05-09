@@ -21,7 +21,7 @@ button {
   border: none;
   box-shadow: 0.5px 0.5px 3px 0 black;
   border-radius: 4px;
-  padding: 2px 5px;
+  padding: 5px 10px;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
   background-color: #db9d47;
